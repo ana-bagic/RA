@@ -1,8 +1,8 @@
 package fer.zemris.racani.trajectory.tracking;
 
-import fer.zemris.racani.trajectory.tracking.model.Object;
 import fer.zemris.racani.trajectory.tracking.model.Polygon;
 import fer.zemris.racani.trajectory.tracking.model.Vertex;
+import fer.zemris.racani.trajectory.tracking.model.Object;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,7 +59,7 @@ public class Main {
             throw new RuntimeException("File " + curveFile + " not found.");
         }
 
-        Object object = new Object(vertices, polygons);
+        Object object = new Object(polygons, origin);
         TrajectoryTracking tracking = new TrajectoryTracking(object, curve);
         tracking.animate();
     }

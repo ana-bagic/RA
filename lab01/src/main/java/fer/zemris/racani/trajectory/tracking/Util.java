@@ -8,9 +8,9 @@ import java.util.List;
 public class Util {
 
     public static Vertex loadVertex(String[] elements) {
-        double x = Double.parseDouble(elements[1]);
-        double y = Double.parseDouble(elements[2]);
-        double z = Double.parseDouble(elements[3]);
+        float x = Float.parseFloat(elements[1]);
+        float y = Float.parseFloat(elements[2]);
+        float z = Float.parseFloat(elements[3]);
         return new Vertex(x, y, z);
     }
 

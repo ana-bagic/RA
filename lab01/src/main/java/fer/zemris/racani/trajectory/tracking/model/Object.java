@@ -4,19 +4,19 @@ import java.util.List;
 
 public class Object {
 
-    private List<Vertex> vertices;
-    private List<Polygon> polygons;
+    private final List<Polygon> polygons;
+    private final Vertex origin;
 
-    public Object(List<Vertex> vertices, List<Polygon> polygons) {
-        this.vertices = vertices;
+    public Object(List<Polygon> polygons, Vertex origin) {
         this.polygons = polygons;
-    }
-
-    public List<Vertex> getVertices() {
-        return vertices;
+        this.origin = origin;
     }
 
     public List<Polygon> getPolygons() {
         return polygons;
+    }
+
+    public Vertex getOrigin() {
+        return origin;
     }
 }
