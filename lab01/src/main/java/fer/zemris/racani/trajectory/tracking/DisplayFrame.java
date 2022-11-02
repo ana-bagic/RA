@@ -1,6 +1,5 @@
 package fer.zemris.racani.trajectory.tracking;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
@@ -38,12 +37,13 @@ public class DisplayFrame implements GLEventListener {
 
     @Override
     public void display(GLAutoDrawable glAutoDrawable) {
-        System.out.println("print " + t);
         GL2 gl = glAutoDrawable.getGL().getGL2();
-        //gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glLoadIdentity();
 
-        gl.glScaled(0.1, 0.04, 0);
-        gl.glTranslated(-5, -22, -5);
+        gl.glColor3d(1, 1, 1);
+        gl.glScaled(0.15, 0.06, 0);
+        gl.glTranslated(-4, -17, -5);
         gl.glRotated(-30,1, 0, 0);
 
         gl.glBegin (GL2.GL_LINE_STRIP);
@@ -53,6 +53,7 @@ public class DisplayFrame implements GLEventListener {
         gl.glEnd();
 
         gl.glBegin(GL2.GL_LINES);
+        gl.glColor3d(0, 1, 1);
         for(Vertex v: someTangent) {
             gl.glVertex3f(v.getX(), v.getY(), v.getZ());
         }
@@ -61,7 +62,8 @@ public class DisplayFrame implements GLEventListener {
         Vertex spline = bSpline.get(t);
         gl.glTranslated(spline.getX(), spline.getY(), spline.getZ());
 
-        Vertex e = tangent.get(t);
+        Vertex e = tangent.get(t).copy();
+        e.translate(-spline.getX(), -spline.getY(), -spline.getZ());
         Vertex origin = object.getOrigin();
         float osx = s.getY()*e.getZ() - s.getZ()*e.getY();
         float osy = s.getZ()*e.getX() - s.getX()*e.getZ();
@@ -73,6 +75,7 @@ public class DisplayFrame implements GLEventListener {
         gl.glTranslated(-origin.getX(), -origin.getY(), -origin.getZ());
 
         gl.glBegin(GL2.GL_LINES);
+        gl.glColor3d(1, 1, 1);
         for(Polygon p: object.getPolygons()) {
             Vertex v1 = p.getV1();
             Vertex v2 = p.getV2();
@@ -106,7 +109,7 @@ public class DisplayFrame implements GLEventListener {
 
         t++;
 
-        if(t == TrajectoryTracking.T_VALUES) {
+        if(t == bSpline.size()) {
             t = 0;
         }
     }

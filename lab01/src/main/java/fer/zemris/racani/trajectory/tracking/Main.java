@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        String objectFile = "examples/kocka.obj";
+        String objectFile = "examples/aircraft747.obj";
         String curveFile = "examples/bSpline.txt";
         List<Vertex> vertices = new LinkedList<>();
         List<Polygon> polygons = new LinkedList<>();
@@ -27,7 +27,7 @@ public class Main {
 
                 String[] elements = line.split(" ");
                 if(line.startsWith("v")) {
-                    Vertex vertex = Util.loadVertex(elements);
+                    Vertex vertex = Util.loadVertex(elements, true);
                     origin.translate(vertex);
                     vertices.add(vertex);
                 } else if(line.startsWith("f")) {
@@ -49,7 +49,7 @@ public class Main {
                 if(line.startsWith("#") || line.equals("")) continue;
 
                 if(line.startsWith("v")) {
-                    curve.add(Util.loadVertex(line.split(" ")));
+                    curve.add(Util.loadVertex(line.split(" "), false));
                 } else {
                     throw new RuntimeException("File " + curveFile + " is not formatted right. " +
                             "Line " + line + " is not valid.");

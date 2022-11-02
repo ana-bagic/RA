@@ -3,10 +3,9 @@ package fer.zemris.racani.trajectory.tracking;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
-import fer.zemris.racani.trajectory.tracking.model.Vertex;
 import fer.zemris.racani.trajectory.tracking.model.Object;
+import fer.zemris.racani.trajectory.tracking.model.Vertex;
 
 import javax.swing.*;
 import java.util.LinkedList;
@@ -16,7 +15,7 @@ public class TrajectoryTracking {
 
     private final Object object;
     private final List<Vertex> curve;
-    public static final int T_VALUES = 100;
+    private static final int T_VALUES = 100;
     private static final double T_INCREMENT = 1.0/T_VALUES;
 
     public TrajectoryTracking(Object object, List<Vertex> curve) {
@@ -81,8 +80,7 @@ public class TrajectoryTracking {
         frame.setSize(frame.getContentPane().getPreferredSize());
         frame.setVisible(true);
 
-        Animator animator = new Animator();
-        animator.add(glcanvas);
+        FPSAnimator animator = new FPSAnimator(glcanvas, 60);
         animator.start();
     }
 

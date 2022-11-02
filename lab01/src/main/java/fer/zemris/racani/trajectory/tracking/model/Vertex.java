@@ -24,6 +24,12 @@ public class Vertex {
         return z;
     }
 
+    public void translate(float deltaX, float deltaY, float deltaZ) {
+        this.x += deltaX;
+        this.y += deltaY;
+        this.z += deltaZ;
+    }
+
     public void translate(Vertex vertex) {
         this.x += vertex.x;
         this.y += vertex.y;
@@ -44,4 +50,7 @@ public class Vertex {
         return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
     }
 
+    public Vertex copy() {
+        return new Vertex(x, y, z);
+    }
 }
