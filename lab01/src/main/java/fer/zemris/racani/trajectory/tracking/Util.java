@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Util {
 
-    private static final int increaseObject = 2;
+    private static final double increaseObject = 0.1;
 
     public static Vertex loadVertex(String[] elements, boolean increase) {
         float x = Float.parseFloat(elements[1]);

@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        String objectFile = "examples/aircraft747.obj";
+        String objectFile = "examples/teddy.obj";
         String curveFile = "examples/bSpline.txt";
         List<Vertex> vertices = new LinkedList<>();
         List<Polygon> polygons = new LinkedList<>();
