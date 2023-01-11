@@ -1,0 +1,5 @@
+PopulationSize: 100
+Step: 2
+Size: 3
+TournamentSize: 7
+MutationProbability: 0.2
