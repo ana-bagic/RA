@@ -1,13 +1,15 @@
 package fer.zemris.moop;
 
 import fer.zemris.moop.algorithm.Configuration;
-import fer.zemris.moop.model.MOOPProblem2;
+import fer.zemris.moop.model.MOOPProblem1;
 import fer.zemris.moop.operators.ArithmeticCrossover;
 import fer.zemris.moop.operators.GaussMutation;
 import fer.zemris.moop.operators.KTournamentSelection;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
@@ -20,7 +22,8 @@ public class Util {
 
     public static void loadConfiguration(String path) {
         CONFIG.setCrossover(new ArithmeticCrossover());
-        CONFIG.setProblem(new MOOPProblem2());
+        CONFIG.setProblem(new MOOPProblem1());
+        CONFIG.setPlay(false);
 
         try(Scanner sc = new Scanner(new File(path))) {
             while(sc.hasNext()) {
@@ -37,10 +40,6 @@ public class Util {
                     }
                     case "Step": {
                         CONFIG.setStep(Double.parseDouble(value));
-                        break;
-                    }
-                    case "Size": {
-                        CONFIG.setSize(Double.parseDouble(value));
                         break;
                     }
                     case "TournamentSize": {
@@ -77,6 +76,33 @@ public class Util {
 
     public static double randD(double lower, double upper) {
         return RAND.nextDouble()*(upper - lower) + lower;
+    }
+
+    public static double getRealStep(double step) {
+        double realStep = 1;
+
+        if(step >= 1) {
+            while(step / 10 >= 1) {
+                realStep *= 10;
+                step /= 10;
+            }
+        } else {
+            while(step * 10 <= 10) {
+                realStep /= 10;
+                step *= 10;
+            }
+        }
+
+        if(step / 5 >= 1) realStep *= 5;
+        if(step / 2 >= 1) realStep *= 2;
+
+        return realStep;
+    }
+
+    public static String doubleAsString(double value) {
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(5, RoundingMode.HALF_UP);
+        return String.valueOf(bd.doubleValue());
     }
 
 }

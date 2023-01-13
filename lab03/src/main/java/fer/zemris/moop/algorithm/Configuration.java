@@ -11,7 +11,6 @@ public class Configuration {
     private MOOPProblem problem;
     private int populationSize;
     private double step;
-    private double size;
     private Function<List<Vertex>, Vertex> selection;
     private Function<List<Vertex>, List<Vertex>> crossover;
     private Function<Vertex, Vertex> mutation;
@@ -19,6 +18,7 @@ public class Configuration {
     private double translationY;
     private double scaleX;
     private double scaleY;
+    private boolean play;
 
     public MOOPProblem getProblem() {
         return problem;
@@ -28,9 +28,6 @@ public class Configuration {
     }
     public double getStep() {
         return step;
-    }
-    public double getSize() {
-        return size;
     }
     public Function<List<Vertex>, Vertex> getSelection() {
         return selection;
@@ -53,6 +50,9 @@ public class Configuration {
     public double getScaleY() {
         return scaleY;
     }
+    public boolean isPlay() {
+        return play;
+    }
 
     public void setProblem(MOOPProblem problem) {
         this.problem = problem;
@@ -62,9 +62,6 @@ public class Configuration {
     }
     public void setStep(double step) {
         this.step = step;
-    }
-    public void setSize(double size) {
-        this.size = size;
     }
     public void setSelection(Function<List<Vertex>, Vertex> selection) {
         this.selection = selection;
@@ -86,5 +83,8 @@ public class Configuration {
     }
     public void setScaleY(double scaleY) {
         this.scaleY = scaleY;
+    }
+    public void setPlay(boolean play) {
+        this.play = play;
     }
 }

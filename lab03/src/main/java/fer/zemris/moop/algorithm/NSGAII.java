@@ -28,13 +28,13 @@ public class NSGAII implements GLEventListener {
 
         Util.CONFIG.setTranslationX(0);
         Util.CONFIG.setTranslationY(-5);
-        Util.CONFIG.setScaleX(0.9);
-        Util.CONFIG.setScaleY(0.08);
+        Util.CONFIG.setScaleX(0.05);
+        Util.CONFIG.setScaleY(0.05);
     }
 
     @Override
     public void display(GLAutoDrawable glAutoDrawable) {
-        if(iteration % (60*Util.CONFIG.getStep()) == 0) {
+        if(iteration % (60*Util.CONFIG.getStep()) == 0 && Util.CONFIG.isPlay()) {
             optimizeStep();
             System.out.println("Iteration: " + iteration);
         }
@@ -43,6 +43,7 @@ public class NSGAII implements GLEventListener {
         gl.glClearColor(1, 1, 1, 1);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
+        gl.glColor3f(0, 0, 0);
 
         gl.glScaled(Util.CONFIG.getScaleX(), Util.CONFIG.getScaleY(), 0);
         gl.glTranslated(Util.CONFIG.getTranslationX(),  Util.CONFIG.getTranslationY(), 0);
@@ -55,22 +56,111 @@ public class NSGAII implements GLEventListener {
     }
 
     private void drawCoords(GL2 gl) {
+        double inverseX = 1/Util.CONFIG.getScaleX();
+        double inverseY = 1/Util.CONFIG.getScaleY();
+        double arrowX = inverseX * 0.03;
+        double arrowY = inverseY * 0.03;
+
+        double xLeft = -inverseX - Util.CONFIG.getTranslationX();
+        double xRight = inverseX - Util.CONFIG.getTranslationX();
+        double yUp = inverseY - Util.CONFIG.getTranslationY();
+        double yDown = -inverseY - Util.CONFIG.getTranslationY();
+
+        // AXIS
+        gl.glBegin(GL2.GL_LINES);
+        gl.glVertex3d(xLeft, 0, 0);
+        gl.glVertex3d(xRight, 0, 0);
+        gl.glVertex3d(0, yUp, 0);
+        gl.glVertex3d(0, yDown, 0);
+        gl.glEnd();
+
+        // arrows on axis
+        gl.glBegin(GL2.GL_TRIANGLES);
+        gl.glVertex3d(xLeft, 0, 0);
+        gl.glVertex3d(xLeft + arrowX, arrowY, 0);
+        gl.glVertex3d(xLeft + arrowX, -arrowY, 0);
+        gl.glVertex3d(xRight, 0, 0);
+        gl.glVertex3d(xRight - arrowX, arrowY, 0);
+        gl.glVertex3d(xRight - arrowX, -arrowY, 0);
+        gl.glVertex3d(0, yUp, 0);
+        gl.glVertex3d(arrowX, yUp - arrowY, 0);
+        gl.glVertex3d(-arrowX, yUp - arrowY, 0);
+        gl.glVertex3d(0, yDown, 0);
+        gl.glVertex3d(arrowX, yDown + arrowY, 0);
+        gl.glVertex3d(-arrowX, yDown + arrowY, 0);
+        gl.glEnd();
+
+        // LINES
+        double diffX = xRight - xLeft;
+        double stepX = diffX / 9;
+        double realStepX = Util.getRealStep(stepX);
+        double offsetY = inverseY * 0.01;
+        double diffY = yUp - yDown;
+        double stepY = diffY / 9;
+        double realStepY = Util.getRealStep(stepY);
+        double offsetX = inverseX * 0.01;
+
+        gl.glBegin(GL2.GL_LINES);
+        for(double x = realStepX; x < xRight; x += realStepX) {
+            gl.glVertex3d(x, -offsetY, 0);
+            gl.glVertex3d(x, offsetY, 0);
+        }
+        for(double x = -realStepX; x > xLeft; x -= realStepX) {
+            gl.glVertex3d(x, -offsetY, 0);
+            gl.glVertex3d(x, offsetY, 0);
+        }
+        for(double y = realStepY; y < yUp; y += realStepY) {
+            gl.glVertex3d(-offsetX, y, 0);
+            gl.glVertex3d(offsetX, y, 0);
+        }
+        for(double y = -realStepY; y > yDown; y -= realStepY) {
+            gl.glVertex3d(-offsetX, y, 0);
+            gl.glVertex3d(offsetX, y, 0);
+        }
+        gl.glEnd();
+
+        // LABELS
         GLUT glut = new GLUT();
-        gl.glColor3f(0, 0, 0);
+        double scaleX = inverseX * 0.00025;
+        double scaleY = inverseY * 0.0004;
+        double offsetLabelX = inverseX * 0.04;
+        double offsetLabelY = inverseY * 0.065;
 
         gl.glPushMatrix();
-        double scaleX = 1/Util.CONFIG.getScaleX() * 0.00015;
-        double scaleY = 1/Util.CONFIG.getScaleY() * 0.0003;
+        gl.glTranslated(-offsetLabelX, -offsetLabelY, 0);
         gl.glScaled(scaleX, scaleY, 0);
         glut.glutStrokeString(GLUT.STROKE_ROMAN, "0");
         gl.glPopMatrix();
 
-        gl.glBegin(GL2.GL_LINES);
-        gl.glVertex3d(-5, 0, 0);
-        gl.glVertex3d(5, 0, 0);
-        gl.glVertex3d(0, -10, 0);
-        gl.glVertex3d(0, 10, 0);
-        gl.glEnd();
+        offsetLabelX = inverseX * 0.08;
+        for(double x = realStepX; x < xRight; x += realStepX) {
+            gl.glPushMatrix();
+            gl.glTranslated(x, -offsetLabelY, 0);
+            gl.glScaled(scaleX, scaleY, 0);
+            glut.glutStrokeString(GLUT.STROKE_ROMAN, Util.doubleAsString(x));
+            gl.glPopMatrix();
+        }
+        for(double x = -realStepX; x > xLeft; x -= realStepX) {
+            gl.glPushMatrix();
+            gl.glTranslated(x, -offsetLabelY, 0);
+            gl.glScaled(scaleX, scaleY, 0);
+            glut.glutStrokeString(GLUT.STROKE_ROMAN, Util.doubleAsString(x));
+            gl.glPopMatrix();
+        }
+        for(double y = realStepY; y < yUp; y += realStepY) {
+            gl.glPushMatrix();
+            gl.glTranslated(-offsetLabelX, y, 0);
+            gl.glScaled(scaleX, scaleY, 0);
+            glut.glutStrokeString(GLUT.STROKE_ROMAN, Util.doubleAsString(y));
+            gl.glPopMatrix();
+        }
+        for(double y = -realStepY; y > yDown; y -= realStepY) {
+            gl.glPushMatrix();
+            gl.glTranslated(-offsetLabelX, y, 0);
+            gl.glScaled(scaleX, scaleY, 0);
+            glut.glutStrokeString(GLUT.STROKE_ROMAN, Util.doubleAsString(y));
+            gl.glPopMatrix();
+        }
     }
 
     private void optimizeStep() {
@@ -214,10 +304,10 @@ public class NSGAII implements GLEventListener {
 
             setColor(gl, vertex.getFront());
             gl.glBegin(GL2.GL_QUADS);
-            gl.glVertex3d(x - sizeX, y - sizeY, 0.0);
-            gl.glVertex3d(x - sizeX, y + sizeY, 0.0);
-            gl.glVertex3d(x + sizeX, y + sizeY, 0.0);
-            gl.glVertex3d(x + sizeX, y - sizeY, 0.0);
+            gl.glVertex3d(x - sizeX, y - sizeY, 0);
+            gl.glVertex3d(x - sizeX, y + sizeY, 0);
+            gl.glVertex3d(x + sizeX, y + sizeY, 0);
+            gl.glVertex3d(x + sizeX, y - sizeY, 0);
             gl.glEnd();
         }
     }

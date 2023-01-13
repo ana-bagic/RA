@@ -11,7 +11,6 @@ public class KeyListener implements java.awt.event.KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("key " + e.getKeyChar());
         Configuration C = Util.CONFIG;
         double translateX = 1/C.getScaleX() * 0.1;
         double translateY = 1/C.getScaleY() * 0.1;
@@ -51,6 +50,10 @@ public class KeyListener implements java.awt.event.KeyListener {
                 if(C.getScaleX() > 0.01) {
                     C.setScaleX(C.getScaleX() - 0.01);
                 }
+                break;
+            }
+            case KeyEvent.VK_P: {
+                C.setPlay(!C.isPlay());
                 break;
             }
         }
