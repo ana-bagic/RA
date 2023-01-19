@@ -1,7 +1,7 @@
 package fer.zemris.moop;
 
 import fer.zemris.moop.algorithm.Configuration;
-import fer.zemris.moop.model.MOOPProblem1;
+import fer.zemris.moop.model.MOOPProblem2;
 import fer.zemris.moop.operators.ArithmeticCrossover;
 import fer.zemris.moop.operators.GaussMutation;
 import fer.zemris.moop.operators.KTournamentSelection;
@@ -22,7 +22,7 @@ public class Util {
 
     public static void loadConfiguration(String path) {
         CONFIG.setCrossover(new ArithmeticCrossover());
-        CONFIG.setProblem(new MOOPProblem1());
+        CONFIG.setProblem(new MOOPProblem2());
         CONFIG.setPlay(false);
 
         try(Scanner sc = new Scanner(new File(path))) {
